@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>그린워싱 탐정단 활동지</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f2f0e8;
+    --paper: #fffef9;
+    --dark: #182818;
+    --green-deep: #2d5a27;
+    --green-mid: #4a8c3f;
+    --green-light: #7ab648;
+    --accent: #c8a84b;
+    --accent-dark: #9e7e2a;
+    --red: #b84a3a;
+    --border: #ccc8b4;
+    --text: #2a2a2a;
+    --text-light: #5a5a4a;
+    --shadow: 0 4px 20px rgba(26,46,26,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(160,150,120,0.13) 28px);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── STICKY HEADER ── */
+  .sticky-header {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--dark);
+    padding: 10px 18px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.38);
+    border-bottom: 3px solid var(--green-light);
+  }
+  .badge-logo {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 900; font-size: 0.92rem;
+    color: var(--green-light); letter-spacing: -0.01em;
+    white-space: nowrap; display: flex; align-items: center; gap: 6px;
+  }
+  .header-inputs { display: flex; gap: 8px; flex: 1; flex-wrap: wrap; }
+  .header-inputs input {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(200,200,180,0.28);
+    border-radius: 7px; color: #fff;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.84rem; padding: 7px 12px; outline: none;
+    transition: border 0.2s, background 0.2s; min-width: 90px;
+  }
+  .header-inputs input::placeholder { color: rgba(255,255,255,0.38); }
+  .header-inputs input:focus { border-color: var(--green-light); background: rgba(255,255,255,0.12); }
+  .save-btn {
+    background: linear-gradient(135deg, var(--green-mid), var(--green-light));
+    border: none; border-radius: 8px; color: #fff; cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.82rem; font-weight: 700; padding: 8px 16px;
+    white-space: nowrap; letter-spacing: 0.02em;
+    transition: all 0.2s; box-shadow: 0 2px 10px rgba(74,140,63,0.4);
+  }
+  .save-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(74,140,63,0.5); }
+  .save-btn:active { transform: translateY(0); }
+
+  /* ── MAIN ── */
+  .main { max-width: 860px; margin: 0 auto; padding: 26px 14px 60px; }
+
+  /* ── TITLE CARD ── */
+  .title-card {
+    background: var(--dark); border-radius: 16px;
+    padding: 30px 34px 26px; margin-bottom: 22px;
+    position: relative; overflow: hidden; box-shadow: var(--shadow);
+  }
+  .title-card::before {
+    content: '🔍';
+    position: absolute; right: 26px; top: 50%; transform: translateY(-50%);
+    font-size: 5.5rem; opacity: 0.10;
+  }
+  .title-card .eyebrow {
+    color: var(--green-light); font-size: 0.76rem; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .title-card h1 {
+    font-family: 'Noto Serif KR', serif; font-weight: 900;
+    font-size: clamp(1.35rem, 4vw, 1.95rem);
+    color: #fff; line-height: 1.32; margin-bottom: 10px;
+  }
+  .title-card h1 em { color: var(--green-light); font-style: normal; }
+  .title-card .subtitle { color: rgba(255,255,255,0.52); font-size: 0.84rem; line-height: 1.65; }
+  .standard-badge {
+    display: inline-block; margin-top: 14px;
+    background: rgba(122,182,72,0.14);
+    border: 1px solid rgba(122,182,72,0.38);
+    border-radius: 6px; padding: 5px 12px;
+    font-size: 0.77rem; color: var(--green-light); font-weight: 500;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-card {
+    background: var(--paper); border: 1.5px solid var(--border);
+    border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; box-shadow: var(--shadow);
+  }
+  .progress-label { font-size: 0.78rem; color: var(--text-light); display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .progress-wrap { background: rgba(200,192,160,0.3); border-radius: 20px; height: 7px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green-mid), var(--green-light)); border-radius: 20px; transition: width 0.5s ease; width: 0%; }
+  .progress-note { font-size: 0.76rem; color: var(--text-light); margin-top: 6px; }
+
+  /* ── SECTION CARD ── */
+  .section-card {
+    background: var(--paper); border-radius: 14px;
+    border: 1.5px solid var(--border); margin-bottom: 20px;
+    overflow: hidden; box-shadow: var(--shadow); transition: box-shadow 0.2s;
+  }
+  .section-card:hover { box-shadow: 0 6px 28px rgba(26,46,26,0.15); }
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 15px 22px; border-bottom: 1.5px solid var(--border);
+    background: linear-gradient(90deg, rgba(45,90,39,0.07), transparent);
+  }
+  .mission-num {
+    background: var(--green-deep); color: #fff;
+    font-family: 'Noto Serif KR', serif; font-weight: 900;
+    font-size: 0.72rem; letter-spacing: 0.07em;
+    padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+  }
+  .section-header h2 { font-family: 'Noto Serif KR', serif; font-weight: 700; font-size: 1.03rem; color: var(--dark); flex: 1; }
+  .section-emoji { font-size: 1.4rem; }
+  .section-body { padding: 20px 22px; }
+
+  /* ── GUIDE BOX ── */
+  .guide-box {
+    background: rgba(122,182,72,0.08); border-left: 3px solid var(--green-light);
+    border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 16px;
+    font-size: 0.83rem; color: var(--text-light); line-height: 1.65;
+  }
+
+  /* ── FIELDS ── */
+  .field-label { font-size: 0.79rem; font-weight: 700; color: var(--green-deep); letter-spacing: 0.04em; margin-bottom: 6px; display: block; }
+  .field-input {
+    width: 100%; background: #f8f7f1; border: 1.5px solid var(--border);
+    border-radius: 8px; color: var(--text); font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.89rem; line-height: 1.65; padding: 10px 14px;
+    outline: none; resize: vertical;
+    transition: border 0.2s, background 0.2s, box-shadow 0.2s; margin-bottom: 14px;
+  }
+  .field-input:focus { border-color: var(--green-mid); background: #fff; box-shadow: 0 0 0 3px rgba(74,140,63,0.10); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 560px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 18px; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: #f8f7f1; border: 1.5px solid var(--border);
+    border-radius: 9px; padding: 11px 14px;
+    cursor: pointer; transition: all 0.2s;
+    font-size: 0.87rem; line-height: 1.5; user-select: none;
+  }
+  .checklist li:hover { border-color: var(--green-mid); background: rgba(122,182,72,0.06); }
+  .checklist li.checked { border-color: var(--red); background: rgba(184,74,58,0.06); }
+  .check-icon {
+    width: 22px; height: 22px; min-width: 22px; border-radius: 50%;
+    border: 2px solid var(--border); display: flex; align-items: center;
+    justify-content: center; font-size: 0.75rem; transition: all 0.2s; margin-top: 1px;
+  }
+  .checklist li.checked .check-icon { background: var(--red); border-color: var(--red); color: white; }
+  .check-text { flex: 1; }
+  .check-text strong { display: block; font-weight: 700; color: var(--dark); margin-bottom: 2px; }
+  .check-text span { color: var(--text-light); font-size: 0.79rem; }
+
+  /* ── VERDICT ── */
+  .verdict-label { font-size: 0.79rem; font-weight: 700; color: var(--green-deep); letter-spacing: 0.04em; margin-bottom: 8px; display: block; }
+  .verdict-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .verdict-btn {
+    flex: 1; min-width: 120px; border: 2px solid var(--border); border-radius: 10px;
+    background: #f8f7f1; cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.84rem; font-weight: 700; padding: 12px 8px; text-align: center;
+    transition: all 0.2s; color: var(--text-light);
+  }
+  .verdict-btn:hover { transform: translateY(-2px); }
+  .verdict-btn.sel-green { border-color: var(--green-mid); background: rgba(74,140,63,0.10); color: var(--green-deep); }
+  .verdict-btn.sel-grey  { border-color: var(--accent);    background: rgba(200,168,75,0.10); color: var(--accent-dark); }
+  .verdict-btn.sel-red   { border-color: var(--red);       background: rgba(184,74,58,0.10);  color: var(--red); }
+  .verdict-icon { font-size: 1.55rem; display: block; margin-bottom: 4px; }
+
+  hr.dashed { border: none; border-top: 1.5px dashed var(--border); margin: 18px 0; }
+
+  /* ── PLEDGE CARD ── */
+  .pledge-card {
+    background: linear-gradient(135deg, var(--dark) 0%, #1b3818 100%);
+    border-radius: 14px; padding: 24px 22px; margin-bottom: 20px; box-shadow: var(--shadow);
+  }
+  .pledge-card h2 {
+    font-family: 'Noto Serif KR', serif; font-weight: 900;
+    color: var(--green-light); font-size: 1.08rem; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .pledge-card p { color: rgba(255,255,255,0.46); font-size: 0.81rem; margin-bottom: 14px; }
+  .pledge-card .field-label { color: rgba(122,182,72,0.9); }
+  .pledge-card .field-input {
+    background: rgba(255,255,255,0.07);
+    border: 1.5px solid rgba(122,182,72,0.28); color: #fff;
+  }
+  .pledge-card .field-input::placeholder { color: rgba(255,255,255,0.22); }
+  .pledge-card .field-input:focus { border-color: var(--green-light); background: rgba(255,255,255,0.10); box-shadow: 0 0 0 3px rgba(122,182,72,0.12); }
+
+  /* ── SAVING OVERLAY ── */
+  .saving-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(24,40,24,0.78); z-index: 999;
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 14px;
+    color: #fff; font-size: 1rem; font-weight: 600;
+  }
+  .saving-overlay.active { display: flex; }
+  .spinner { width: 42px; height: 42px; border: 3px solid rgba(255,255,255,0.18); border-top-color: var(--green-light); border-radius: 50%; animation: spin 0.85s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .footer { text-align: center; color: var(--text-light); font-size: 0.76rem; padding: 8px 0 24px; opacity: 0.6; }
+</style>
+</head>
+<body>
+
+<!-- STICKY HEADER -->
+<div class="sticky-header">
+  <div class="badge-logo">🔍 그린워싱 탐정단</div>
+  <div class="header-inputs">
+    <input type="text" id="hd-id"   placeholder="학번 입력" maxlength="15">
+    <input type="text" id="hd-name" placeholder="이름 입력" maxlength="10">
+  </div>
+  <button class="save-btn" onclick="saveImage()">📥 나의 활동지 이미지로 저장하기</button>
+</div>
+
+<!-- SAVING OVERLAY -->
+<div class="saving-overlay" id="saving-overlay">
+  <div class="spinner"></div>
+  <span>활동지를 이미지로 저장하는 중…</span>
+</div>
+
+<!-- CAPTURE AREA -->
+<div id="capture-area">
+<div class="main">
+
+  <!-- TITLE -->
+  <div class="title-card">
+    <div class="eyebrow">🌿 고등학교 통합사회 · 환경 단원</div>
+    <h1>그린워싱 탐정단<br><em>기업의 환경 경영, 비판적으로 분석하기</em></h1>
+    <div class="subtitle">기업이 주장하는 친환경 정책은 진짜일까요? 탐정이 되어 증거를 수집하고 생태시민으로서의 목소리를 내봅시다.</div>
+    <div class="standard-badge">📌 [10통사1-03-03] 환경 문제 해결을 위한 정부·시민사회·기업의 노력 조사 및 생태시민 실천 방안 모색</div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-card">
+    <div class="progress-label">
+      <span>🕵️ 수사 진행도</span>
+      <span id="prog-text">0 / 4 미션 완료</span>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="prog-fill"></div></div>
+    <div class="progress-note">각 미션의 주요 입력칸을 작성하면 진행도가 올라갑니다.</div>
+  </div>
+
+  <!-- ══════════════════════════════
+       MISSION 01
+  ══════════════════════════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="mission-num">MISSION 01</div>
+      <h2>수사 대상(기업) 선정 및 환경 정책 조사</h2>
+      <span class="section-emoji">🏢</span>
+    </div>
+    <div class="section-body">
+      <div class="guide-box">
+        🔍 조사할 기업 또는 브랜드를 한 곳 선정하세요. 공식 홈페이지, ESG 보고서, 뉴스 기사 등을 참고하면 좋습니다.
+      </div>
+      <div class="two-col">
+        <div>
+          <label class="field-label">📌 선정한 기업명</label>
+          <input type="text" class="field-input" id="m1-company" placeholder="예: OO전자, OO패션, OO식품…" oninput="updateProgress()">
+        </div>
+        <div>
+          <label class="field-label">🏭 기업 업종 / 분야</label>
+          <input type="text" class="field-input" placeholder="예: 전자제품 제조, 패션·의류, 식음료…">
+        </div>
+      </div>
+      <label class="field-label">🌱 기업이 공식 발표한 환경 보호 정책 (2~3가지 이상)</label>
+      <textarea class="field-input" id="m1-policy" rows="5"
+        placeholder="예)&#10;• 2050년 탄소중립 선언&#10;• 재생 플라스틱 포장재 전환&#10;• 태양광 공장 전환 등 친환경 에너지 전략"
+        oninput="updateProgress()"></textarea>
+      <label class="field-label">📊 조사 출처 (URL 또는 자료명)</label>
+      <input type="text" class="field-input" placeholder="예: OO전자 공식 홈페이지 ESG 보고서 2024">
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       MISSION 02
+  ══════════════════════════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="mission-num">MISSION 02</div>
+      <h2>정부·지자체 규제 및 시민사회의 요구 조사</h2>
+      <span class="section-emoji">⚖️</span>
+    </div>
+    <div class="section-body">
+      <div class="guide-box">
+        🔍 해당 기업의 환경 정책과 관련하여 정부·지자체의 규제, 시민단체·소비자 등의 요구를 조사하세요.
+      </div>
+      <label class="field-label">🏛️ 정부 및 지자체의 관련 규제·정책</label>
+      <textarea class="field-input" id="m2-gov" rows="4"
+        placeholder="예)&#10;• 환경부: 2025년부터 일회용 플라스틱 포장재 사용 제한 강화&#10;• 서울시: 탄소중립 기업 인증제 시행&#10;• ESG 공시 의무화 (그린뉴딜 정책)"
+        oninput="updateProgress()"></textarea>
+      <label class="field-label">✊ 시민사회(NGO·소비자단체 등)의 요구·비판</label>
+      <textarea class="field-input" rows="4"
+        placeholder="예)&#10;• 환경운동연합: 실질적 온실가스 감축 계획 공개 촉구&#10;• 소비자단체: 친환경 인증 라벨 남용 규제 강화 요청&#10;• SNS 불매운동: 공식 재활용률과 실제 수치 차이 지적"></textarea>
+      <label class="field-label">📊 조사 출처</label>
+      <input type="text" class="field-input" placeholder="예: 환경부 보도자료, 녹색소비자연대 성명서 2024…">
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       MISSION 03
+  ══════════════════════════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="mission-num">MISSION 03</div>
+      <h2>그린워싱 체크리스트 분석 및 중간 결론 도출</h2>
+      <span class="section-emoji">🧪</span>
+    </div>
+    <div class="section-body">
+      <div class="guide-box">
+        🔍 아래 7가지 그린워싱 징후를 확인하세요. 해당된다고 판단되는 항목을 클릭하면 체크됩니다.
+      </div>
+
+      <ul class="checklist">
+        <li onclick="toggleCheck(this)">
+          <div class="check-icon">✓</div>
+          <div class="check-text">
+            <strong>① 모호한 주장</strong>
+            <span>"친환경", "자연 친화적" 등 구체적 근거 없이 막연한 표현만 사용한다.</span>
+          </div>
+        </li>
+        <li onclick="toggleCheck(this)">
+          <div class="check-icon">✓</div>
+          <div class="check-text">
+            <strong>② 검증 불가 주장</strong>
+            <span>제3자 인증 없이 자체적으로만 친환경을 주장한다.</span>
+          </div>
+        </li>
+        <li onclick="toggleCheck(this)">
+          <div class="check-icon">✓</div>
+          <div class="check-text">
+            <strong>③ 과장 또는 허위 라벨</strong>
+            <span>공인되지 않은 마크나 라벨을 마치 공식 인증처럼 사용한다.</span>
+          </div>
+        </li>
+        <li onclick="toggleCheck(this)">
+          <div class="check-icon">✓</div>
+          <div class="check-text">
+            <strong>④ 무관한 주장</strong>
+            <span>실제 환경 영향과 무관한 부분에서만 친환경을 강조한다.</span>
+          </div>
+        </li>
+        <li onclick="toggleCheck(this)">
+          <div class="check-icon">✓</div>
+          <div class="check-text">
+            <strong>⑤ 적은 것 중의 최선</strong>
+            <span>전체적으로 해로운 제품이지만 특정 요소만 개선하고 친환경 이미지를 내세운다.</span>
+          </div>
+        </li>
+        <li onclick="toggleCheck(this)">
+          <div class="check-icon">✓</div>
+          <div class="check-text">
+            <strong>⑥ 거짓말</strong>
+            <span>공개된 데이터나 실제 기업 행동이 환경 정책 주장과 명백히 다르다.</span>
+          </div>
+        </li>
+        <li onclick="toggleCheck(this)">
+          <div class="check-icon">✓</div>
+          <div class="check-text">
+            <strong>⑦ 정보 은폐</strong>
+            <span>일부 긍정적 정보만 부각하고 부정적인 환경 영향은 숨기거나 공개하지 않는다.</span>
+          </div>
+        </li>
+      </ul>
+
+      <label class="field-label">📝 체크리스트 분석 메모 (해당 항목에 대한 구체적 근거)</label>
+      <textarea class="field-input" rows="4"
+        placeholder="예) ①, ③번에 해당함. 공식 홈페이지에서 '친환경 소재 사용'이라고 명시했지만, 실제 재활용 소재 비율은 3%에 불과하다는 보도가 있었음."></textarea>
+
+      <hr class="dashed">
+
+      <span class="verdict-label">🏁 중간 결론: 이 기업의 환경 정책을 어떻게 평가하시나요?</span>
+      <div class="verdict-row">
+        <button class="verdict-btn" onclick="selectVerdict(this,'sel-green')">
+          <span class="verdict-icon">✅</span>진정성 있는<br>환경 경영
+        </button>
+        <button class="verdict-btn" onclick="selectVerdict(this,'sel-grey')">
+          <span class="verdict-icon">⚠️</span>일부 그린워싱<br>의심
+        </button>
+        <button class="verdict-btn" onclick="selectVerdict(this,'sel-red')">
+          <span class="verdict-icon">🚨</span>명백한<br>그린워싱
+        </button>
+      </div>
+
+      <label class="field-label">✍️ 중간 결론 근거 서술</label>
+      <textarea class="field-input" id="m3-conclusion" rows="4"
+        placeholder="위에서 분석한 체크리스트와 조사 내용을 바탕으로 중간 결론의 근거를 서술하세요."
+        oninput="updateProgress()"></textarea>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       MISSION 04 · PLEDGE
+  ══════════════════════════════ -->
+  <div class="pledge-card">
+    <h2>🌍 MISSION 04 · 기업에게 보내는 제안 &amp; 나의 다짐</h2>
+    <p>탐정 수사의 마지막 단계입니다. 기업에게 실질적인 개선 방향을 제안하고, 생태시민으로서 나의 다짐을 작성하세요.</p>
+
+    <label class="field-label">📩 기업에게 보내는 제안 (구체적·실현 가능한 개선 방향)</label>
+    <textarea class="field-input" id="m4-proposal" rows="5"
+      placeholder="예)&#10;• 환경 정책의 구체적 수치와 달성 로드맵을 공식 사이트에 투명하게 공개하세요.&#10;• 독립적인 제3자 기관의 친환경 인증을 취득하세요.&#10;• 공급망 전반의 탄소발자국을 측정하고 감축 계획을 수립하세요."
+      oninput="updateProgress()"></textarea>
+
+    <label class="field-label">🌱 생태시민으로서 나의 다짐</label>
+    <textarea class="field-input" rows="4"
+      placeholder="예)&#10;• 제품 구매 시 친환경 인증 마크를 꼼꼼히 확인하겠습니다.&#10;• 기업의 실제 환경 실천을 감시하는 소비자가 되겠습니다.&#10;• 주변에 그린워싱 문제를 알리고 비판적 소비 문화를 확산하겠습니다."></textarea>
+  </div>
+
+  <div class="footer">🔍 그린워싱 탐정단 활동지 · 고등학교 통합사회</div>
+</div>
+</div><!-- /capture-area -->
+
+<script>
+  /* PROGRESS */
+  function updateProgress() {
+    const fields = [
+      document.getElementById('m1-company'),
+      document.getElementById('m1-policy'),
+      document.getElementById('m2-gov'),
+      document.getElementById('m3-conclusion'),
+      document.getElementById('m4-proposal'),
+    ];
+    const done = fields.filter(f => f && f.value.trim().length > 5).length;
+    const pct  = Math.round((done / fields.length) * 100);
+    document.getElementById('prog-fill').style.width = pct + '%';
+    const missions = Math.min(4, Math.floor(done * 4 / fields.length + (done === fields.length ? 0 : 0)));
+    const mDone = done >= 5 ? 4 : done >= 4 ? 3 : done >= 2 ? 2 : done >= 1 ? 1 : 0;
+    document.getElementById('prog-text').textContent = mDone + ' / 4 미션 완료';
+  }
+
+  /* CHECKLIST TOGGLE */
+  function toggleCheck(el) { el.classList.toggle('checked'); }
+
+  /* VERDICT SELECTION */
+  function selectVerdict(btn, cls) {
+    const all = btn.parentElement.querySelectorAll('.verdict-btn');
+    all.forEach(b => b.classList.remove('sel-green','sel-grey','sel-red'));
+    btn.classList.add(cls);
+  }
+
+  /* SAVE IMAGE */
+  async function saveImage() {
+    const sid  = document.getElementById('hd-id').value.trim()   || '학번';
+    const name = document.getElementById('hd-name').value.trim() || '이름';
+    const filename = `그린워싱탐정단_${sid}_${name}.png`;
+    const overlay  = document.getElementById('saving-overlay');
+    overlay.classList.add('active');
+    try {
+      const area   = document.getElementById('capture-area');
+      const canvas = await html2canvas(area, {
+        scale: 1.8, useCORS: true,
+        backgroundColor: '#f2f0e8', logging: false, windowWidth: 900,
+      });
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch(e) {
+      alert('저장 중 오류가 발생했습니다. 다시 시도해 주세요.\n' + e.message);
+    } finally {
+      overlay.classList.remove('active');
+    }
+  }
+</script>
+</body>
+</html>
